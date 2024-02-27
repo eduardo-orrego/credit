@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: credit
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017
+      database: demo
+
+server:
+  port: 8083
