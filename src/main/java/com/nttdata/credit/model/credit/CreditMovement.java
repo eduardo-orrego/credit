@@ -1,4 +1,4 @@
-package com.nttdata.credit.model;
+package com.nttdata.credit.model.credit;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nttdata.credit.model.enums.CreditTransactionTypeEnum;
