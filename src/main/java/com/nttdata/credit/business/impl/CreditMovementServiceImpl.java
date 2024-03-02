@@ -1,6 +1,7 @@
 package com.nttdata.credit.business.impl;
 
 import com.nttdata.credit.business.CreditMovementService;
+import com.nttdata.credit.model.credit.CreditMovement;
 import com.nttdata.credit.repository.CreditMovementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

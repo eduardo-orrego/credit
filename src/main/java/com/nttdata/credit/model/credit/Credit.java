@@ -7,6 +7,7 @@ import com.nttdata.credit.model.enums.StatusTypeEnum;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,6 +37,9 @@ public class Credit {
     @Enumerated(EnumType.STRING)
     @NotNull
     private StatusTypeEnum status;
+
+    @JsonProperty(value = "creditNumber")
+    private BigInteger creditNumber;
 
     @JsonProperty(value = "openingDate")
     @NotNull

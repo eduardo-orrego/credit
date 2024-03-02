@@ -1,7 +1,7 @@
 package com.nttdata.credit.model.credit;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.nttdata.account.model.enums.SignerTypeEnum;
+import com.nttdata.credit.model.enums.SignerTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

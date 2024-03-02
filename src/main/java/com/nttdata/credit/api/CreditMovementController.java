@@ -1,6 +1,7 @@
 package com.nttdata.credit.api;
 
 import com.nttdata.credit.business.CreditMovementService;
+import com.nttdata.credit.model.credit.CreditMovement;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;

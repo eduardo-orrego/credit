@@ -7,6 +7,7 @@ import com.nttdata.credit.model.credit.CreditHolder;
 import com.nttdata.credit.model.enums.CustomerTypeEnum;
 import com.nttdata.credit.model.enums.HolderTypeEnum;
 import com.nttdata.credit.repository.CreditRepository;
+import java.math.BigInteger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -25,13 +26,16 @@ public class CreditServiceImpl implements CreditService {
     }
 
     @Override
-    public Mono<Credit> getCreditByCreditNumber(String creditNumber) {
-        return creditRepository.findByCreditNumber(creditNumber);
+    public Mono<Credit> getCreditByCreditNumber(BigInteger creditNumber) {
+        return creditRepository.findByCreditNumber(creditNumber)
+            .switchIfEmpty(Mono.error(new RuntimeException("Numero de credito no existe")));
     }
 
     @Override
     public Flux<Credit> getCreditsByCustomerId(String customerId) {
-        return creditRepository.findByHolderId(customerId);
+        return creditRepository.findByCreditHoldersHolderId(customerId)
+            .switchIfEmpty(Mono.error(new RuntimeException("No se encontraron creditos asociados al cliente "
+                .concat(customerId))));
     }
 
     @Override
@@ -54,7 +58,7 @@ public class CreditServiceImpl implements CreditService {
                 if (customerData.getType().equals(CustomerTypeEnum.PERSONAL.name())) {
                     return creditRepository.existsByTypeAndCreditHoldersHolderId(creditType, customerId)
                         .flatMap(existsCredit -> {
-                            if (existsCredit) {
+                            if (Boolean.TRUE.equals(existsCredit)) {
                                 return Mono.error(new RuntimeException("El Cliente Personal ya tiene un " +
                                     "credit del tipo ".concat(creditType)));
                             } else {
