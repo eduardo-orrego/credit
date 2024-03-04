@@ -1,6 +1,7 @@
 package com.nttdata.credit.model.credit;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
@@ -23,5 +24,9 @@ public class LoanInfo {
 
     @JsonProperty(value = "maturityDate")
     private LocalDate maturityDate;
+
+    @JsonProperty(value = "disbursementDate")
+    @NotNull
+    private LocalDate disbursementDate;
 
 }
