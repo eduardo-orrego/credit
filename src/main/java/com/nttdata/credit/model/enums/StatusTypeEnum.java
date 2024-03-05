@@ -3,13 +3,13 @@ package com.nttdata.credit.model.enums;
 import lombok.Getter;
 
 @Getter
-public enum CreditTransactionTypeEnum {
-    PURCHASE("purchase"),
-    PAYMENT("payment");
+public enum StatusTypeEnum {
+    ACTIVE("ACTIVE"),
+    INACTIVE("INACTIVE");
 
-    private final String value;
+    private String value;
 
-    CreditTransactionTypeEnum(String value) {
+    StatusTypeEnum(String value) {
         this.value = value;
     }
 
@@ -18,8 +18,8 @@ public enum CreditTransactionTypeEnum {
         return String.valueOf(value);
     }
 
-    public static CreditTransactionTypeEnum fromValue(String value) {
-        for (CreditTransactionTypeEnum b : CreditTransactionTypeEnum.values()) {
+    public static StatusTypeEnum fromValue(String value) {
+        for (StatusTypeEnum b : StatusTypeEnum.values()) {
             if (b.value.equals(value)) {
                 return b;
             }

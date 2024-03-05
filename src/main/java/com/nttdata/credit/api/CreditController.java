@@ -1,7 +1,7 @@
 package com.nttdata.credit.api;
 
 import com.nttdata.credit.business.CreditService;
-import com.nttdata.credit.model.Credit;
+import com.nttdata.credit.model.credit.Credit;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -10,11 +10,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.constraints.NotNull;
+import java.math.BigInteger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,7 +56,7 @@ public class CreditController {
     )
     public Mono<Credit> creditsCreditIdGet(
         @Parameter(name = "creditNumber", description = "", required = true, in = ParameterIn.PATH)
-        @PathVariable("creditNumber") String creditNumber
+        @PathVariable("creditNumber") BigInteger creditNumber
     ) {
         return creditService.getCreditByCreditNumber(creditNumber);
     }
@@ -106,9 +108,37 @@ public class CreditController {
         consumes = {"application/json"}
     )
     public Mono<Credit> creditsPost(
-        @Parameter(name = "Credit", description = "")
-        @Validated @RequestBody(required = false) Credit credit
+        @Parameter(name = "credit", description = "")
+        @Validated @RequestBody Credit credit
     ) {
         return creditService.saveCredit(credit);
     }
+
+    /**
+     * PUT : Update a credit exists
+     *
+     * @param credit (optional)
+     * @return Created (status code 200)
+     */
+    @Operation(
+        operationId = "creditsPut",
+        summary = "Update a credit exists",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Ok", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = Credit.class))
+            })
+        }
+    )
+    @PutMapping(
+        value = "",
+        produces = {"application/json"},
+        consumes = {"application/json"}
+    )
+    public Mono<Credit> creditsPut(
+        @Parameter(name = "credit", description = "")
+        @Validated @RequestBody Credit credit
+    ) {
+        return creditService.updateCredit(credit);
+    }
+
 }

@@ -3,12 +3,14 @@ package com.nttdata.credit.model.enums;
 import lombok.Getter;
 
 @Getter
-public enum CreditTypeEnum {
-    LOAN("LOAN"),
-    CREDIT_CARD("CREDIT_CARD");
+public enum CustomerSubTypeEnum {
+    NORMAL("NORMAL"),
+    VIP("VIP"),
+    PYME("PYME");
+
     private String value;
 
-    CreditTypeEnum(String value) {
+    CustomerSubTypeEnum(String value) {
         this.value = value;
     }
 
@@ -17,8 +19,8 @@ public enum CreditTypeEnum {
         return String.valueOf(value);
     }
 
-    public static CreditTypeEnum fromValue(String value) {
-        for (CreditTypeEnum b : CreditTypeEnum.values()) {
+    public static CustomerSubTypeEnum fromValue(String value) {
+        for (CustomerSubTypeEnum b : CustomerSubTypeEnum.values()) {
             if (b.value.equals(value)) {
                 return b;
             }
