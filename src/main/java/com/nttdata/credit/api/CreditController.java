@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -107,9 +108,37 @@ public class CreditController {
         consumes = {"application/json"}
     )
     public Mono<Credit> creditsPost(
-        @Parameter(name = "Credit", description = "")
-        @Validated @RequestBody(required = false) Credit credit
+        @Parameter(name = "credit", description = "")
+        @Validated @RequestBody Credit credit
     ) {
         return creditService.saveCredit(credit);
     }
+
+    /**
+     * PUT : Update a credit exists
+     *
+     * @param credit (optional)
+     * @return Created (status code 200)
+     */
+    @Operation(
+        operationId = "creditsPut",
+        summary = "Update a credit exists",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Ok", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = Credit.class))
+            })
+        }
+    )
+    @PutMapping(
+        value = "",
+        produces = {"application/json"},
+        consumes = {"application/json"}
+    )
+    public Mono<Credit> creditsPut(
+        @Parameter(name = "credit", description = "")
+        @Validated @RequestBody Credit credit
+    ) {
+        return creditService.updateCredit(credit);
+    }
+
 }

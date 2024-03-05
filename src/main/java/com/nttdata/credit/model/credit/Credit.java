@@ -41,6 +41,9 @@ public class Credit {
     @JsonProperty(value = "creditNumber")
     private BigInteger creditNumber;
 
+    @JsonProperty(value = "outstandingBalance")
+    private BigDecimal outstandingBalance;
+
     @JsonProperty(value = "openingDate")
     @NotNull
     private LocalDate openingDate;

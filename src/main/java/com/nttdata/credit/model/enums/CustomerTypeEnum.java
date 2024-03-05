@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum CustomerTypeEnum {
-    PERSONAL("personal"),
-    BUSINESS("business");
+    PERSONAL("PERSONAL"),
+    BUSINESS("BUSINESS");
 
     private String value;
 

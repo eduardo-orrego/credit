@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum SignerTypeEnum {
-    PRIMARY("principal"),
-    SECONDARY("secondary");
+    PRIMARY("PRINCIPAL"),
+    SECONDARY("SECONDARY");
 
     private String value;
 

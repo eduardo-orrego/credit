@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class CreditCardInfo {
 
     @JsonProperty(value = "creditLimit")
-    private BigDecimal amount;
+    private BigDecimal creditLimit;
 
     @JsonProperty(value = "availableBalance")
     private BigDecimal availableBalance;
