@@ -49,7 +49,7 @@ public class CreditServiceImpl implements CreditService {
         return creditRepository.save(credit);
     }
 
-    public Mono<Credit> validateBusinessCredit(Credit creditData) {
+    private Mono<Credit> validateBusinessCredit(Credit creditData) {
         String customerId = creditData.getCreditHolders().stream()
             .filter(creditHolder -> creditHolder.getHolderType().name().equals(HolderTypeEnum.PRIMARY.name()))
             .findFirst().map(CreditHolder::getHolderId).orElse("");
@@ -60,21 +60,17 @@ public class CreditServiceImpl implements CreditService {
             .flatMap(customerData -> {
                 if (customerData.getType().equals(CustomerTypeEnum.PERSONAL.name())) {
                     return creditRepository.existsByTypeAndCreditHoldersHolderId(creditType, customerId)
-                        .flatMap(existsCredit -> {
-                            if (Boolean.TRUE.equals(existsCredit)) {
-                                return Mono.error(new RuntimeException("El Cliente Personal ya tiene un " +
-                                    "credit del tipo ".concat(creditType)));
-                            } else {
-                                return Mono.just(creditData);
-                            }
-                        });
+                        .flatMap(existsCredit ->
+                            Boolean.TRUE.equals(existsCredit)
+                                ? Mono.error(new RuntimeException("El Cliente Personal ya tiene cuenta con credito"))
+                                : Mono.just(creditData)
+                        );
                 }
-
                 return Mono.just(creditData);
-
             })
             .switchIfEmpty(Mono.error(new RuntimeException("No se encontraron datos del titular")));
     }
+
 }
 
 
