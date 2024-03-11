@@ -80,7 +80,7 @@ public class CreditController {
         }
     )
     @PutMapping(
-        value = "",
+        value = "/{creditId}",
         produces = {"application/json"},
         consumes = {"application/json"}
     )
