@@ -1,15 +1,14 @@
-package com.nttdata.credit.model.enums;
+package com.nttdata.credit.enums;
 
 import lombok.Getter;
 
 @Getter
-public enum CurrencyTypeEnum {
-    PEN("PEN"),
-    USD("USD");
-
+public enum CreditTypeEnum {
+    LOAN("LOAN"),
+    CREDIT_CARD("CREDIT_CARD");
     private String value;
 
-    CurrencyTypeEnum(String value) {
+    CreditTypeEnum(String value) {
         this.value = value;
     }
 
@@ -18,8 +17,8 @@ public enum CurrencyTypeEnum {
         return String.valueOf(value);
     }
 
-    public static CurrencyTypeEnum fromValue(String value) {
-        for (CurrencyTypeEnum b : CurrencyTypeEnum.values()) {
+    public static CreditTypeEnum fromValue(String value) {
+        for (CreditTypeEnum b : CreditTypeEnum.values()) {
             if (b.value.equals(value)) {
                 return b;
             }

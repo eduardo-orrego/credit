@@ -1,7 +1,8 @@
 package com.nttdata.credit.api;
 
+import com.nttdata.credit.api.request.CreditRequest;
 import com.nttdata.credit.business.CreditService;
-import com.nttdata.credit.model.credit.Credit;
+import com.nttdata.credit.model.Credit;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -33,6 +34,63 @@ public class CreditController {
     @Autowired
     public CreditController(CreditService creditService) {
         this.creditService = creditService;
+    }
+
+    /**
+     * POST : Create a new credit
+     *
+     * @param credit (required)
+     * @return Created (status code 201)
+     */
+    @Operation(
+        operationId = "creditPost",
+        summary = "Create a new credit",
+        responses = {
+            @ApiResponse(responseCode = "201", description = "Created", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = Credit.class))
+            })
+        }
+    )
+    @PostMapping(
+        value = "",
+        produces = {"application/json"},
+        consumes = {"application/json"}
+    )
+    public Mono<Credit> creditPost(
+        @Parameter(name = "credit", description = "")
+        @Validated @RequestBody CreditRequest credit
+    ) {
+        return creditService.saveCredit(credit);
+    }
+
+    /**
+     * PUT : Update a credit exists
+     *
+     * @param credit   (required)
+     * @param creditId (required)
+     * @return Created (status code 200)
+     */
+    @Operation(
+        operationId = "creditPut",
+        summary = "Update a credit exists",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Ok", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = Credit.class))
+            })
+        }
+    )
+    @PutMapping(
+        value = "",
+        produces = {"application/json"},
+        consumes = {"application/json"}
+    )
+    public Mono<Credit> creditPut(
+        @Parameter(name = "creditId", description = "", required = true, in = ParameterIn.PATH)
+        @PathVariable("creditId") String creditId,
+        @Parameter(name = "credit", description = "")
+        @Validated @RequestBody CreditRequest credit
+    ) {
+        return creditService.updateCredit(credit, creditId);
     }
 
     /**
@@ -87,58 +145,5 @@ public class CreditController {
         return creditService.getCreditsByCustomerId(customerId);
     }
 
-    /**
-     * POST : Create a new credit
-     *
-     * @param credit (optional)
-     * @return Created (status code 201)
-     */
-    @Operation(
-        operationId = "creditsPost",
-        summary = "Create a new credit",
-        responses = {
-            @ApiResponse(responseCode = "201", description = "Created", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Credit.class))
-            })
-        }
-    )
-    @PostMapping(
-        value = "",
-        produces = {"application/json"},
-        consumes = {"application/json"}
-    )
-    public Mono<Credit> creditsPost(
-        @Parameter(name = "credit", description = "")
-        @Validated @RequestBody Credit credit
-    ) {
-        return creditService.saveCredit(credit);
-    }
-
-    /**
-     * PUT : Update a credit exists
-     *
-     * @param credit (optional)
-     * @return Created (status code 200)
-     */
-    @Operation(
-        operationId = "creditsPut",
-        summary = "Update a credit exists",
-        responses = {
-            @ApiResponse(responseCode = "200", description = "Ok", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Credit.class))
-            })
-        }
-    )
-    @PutMapping(
-        value = "",
-        produces = {"application/json"},
-        consumes = {"application/json"}
-    )
-    public Mono<Credit> creditsPut(
-        @Parameter(name = "credit", description = "")
-        @Validated @RequestBody Credit credit
-    ) {
-        return creditService.updateCredit(credit);
-    }
 
 }

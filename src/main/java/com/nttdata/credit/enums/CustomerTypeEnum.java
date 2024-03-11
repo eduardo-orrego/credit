@@ -1,15 +1,15 @@
-package com.nttdata.credit.model.enums;
+package com.nttdata.credit.enums;
 
 import lombok.Getter;
 
 @Getter
-public enum SignerTypeEnum {
-    PRIMARY("PRINCIPAL"),
-    SECONDARY("SECONDARY");
+public enum CustomerTypeEnum {
+    PERSONAL("PERSONAL"),
+    BUSINESS("BUSINESS");
 
     private String value;
 
-    SignerTypeEnum(String value) {
+    CustomerTypeEnum(String value) {
         this.value = value;
     }
 
@@ -18,8 +18,8 @@ public enum SignerTypeEnum {
         return String.valueOf(value);
     }
 
-    public static SignerTypeEnum fromValue(String value) {
-        for (SignerTypeEnum b : SignerTypeEnum.values()) {
+    public static CustomerTypeEnum fromValue(String value) {
+        for (CustomerTypeEnum b : CustomerTypeEnum.values()) {
             if (b.value.equals(value)) {
                 return b;
             }

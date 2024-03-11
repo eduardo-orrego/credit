@@ -1,14 +1,15 @@
-package com.nttdata.credit.model.enums;
+package com.nttdata.credit.enums;
 
 import lombok.Getter;
 
 @Getter
-public enum CreditTypeEnum {
-    LOAN("LOAN"),
-    CREDIT_CARD("CREDIT_CARD");
+public enum HolderTypeEnum {
+    PRIMARY("PRINCIPAL"),
+    SECONDARY("SECONDARY");
+
     private String value;
 
-    CreditTypeEnum(String value) {
+    HolderTypeEnum(String value) {
         this.value = value;
     }
 
@@ -17,8 +18,8 @@ public enum CreditTypeEnum {
         return String.valueOf(value);
     }
 
-    public static CreditTypeEnum fromValue(String value) {
-        for (CreditTypeEnum b : CreditTypeEnum.values()) {
+    public static HolderTypeEnum fromValue(String value) {
+        for (HolderTypeEnum b : HolderTypeEnum.values()) {
             if (b.value.equals(value)) {
                 return b;
             }

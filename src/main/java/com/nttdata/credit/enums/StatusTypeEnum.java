@@ -1,16 +1,15 @@
-package com.nttdata.credit.model.enums;
+package com.nttdata.credit.enums;
 
 import lombok.Getter;
 
 @Getter
-public enum CustomerSubTypeEnum {
-    NORMAL("NORMAL"),
-    VIP("VIP"),
-    PYME("PYME");
+public enum StatusTypeEnum {
+    ACTIVE("ACTIVE"),
+    INACTIVE("INACTIVE");
 
     private String value;
 
-    CustomerSubTypeEnum(String value) {
+    StatusTypeEnum(String value) {
         this.value = value;
     }
 
@@ -19,8 +18,8 @@ public enum CustomerSubTypeEnum {
         return String.valueOf(value);
     }
 
-    public static CustomerSubTypeEnum fromValue(String value) {
-        for (CustomerSubTypeEnum b : CustomerSubTypeEnum.values()) {
+    public static StatusTypeEnum fromValue(String value) {
+        for (StatusTypeEnum b : StatusTypeEnum.values()) {
             if (b.value.equals(value)) {
                 return b;
             }

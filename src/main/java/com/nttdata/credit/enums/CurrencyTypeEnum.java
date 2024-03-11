@@ -1,15 +1,15 @@
-package com.nttdata.credit.model.enums;
+package com.nttdata.credit.enums;
 
 import lombok.Getter;
 
 @Getter
-public enum StatusTypeEnum {
-    ACTIVE("ACTIVE"),
-    INACTIVE("INACTIVE");
+public enum CurrencyTypeEnum {
+    PEN("PEN"),
+    USD("USD");
 
     private String value;
 
-    StatusTypeEnum(String value) {
+    CurrencyTypeEnum(String value) {
         this.value = value;
     }
 
@@ -18,8 +18,8 @@ public enum StatusTypeEnum {
         return String.valueOf(value);
     }
 
-    public static StatusTypeEnum fromValue(String value) {
-        for (StatusTypeEnum b : StatusTypeEnum.values()) {
+    public static CurrencyTypeEnum fromValue(String value) {
+        for (CurrencyTypeEnum b : CurrencyTypeEnum.values()) {
             if (b.value.equals(value)) {
                 return b;
             }
