@@ -4,6 +4,5 @@ import lombok.Getter;
 
 @Getter
 public enum CreditTypeEnum {
-    LOAN,
-    CREDIT_CARD
+    LOAN
 }

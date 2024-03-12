@@ -31,7 +31,7 @@ public class CreditServiceImpl implements CreditService {
 
     @Override
     public Mono<Credit> saveCredit(CreditRequest credit) {
-        return this.validateBusinessCredit(credit)
+        return this.validatePersonalCredit(credit)
             .map(creditRequest -> CreditBuilder.toCreditEntity(creditRequest, null))
             .flatMap(creditRepository::save)
             .doOnSuccess(customer -> log.info("Successful update - creditId: ".concat(customer.getId())));
@@ -40,13 +40,10 @@ public class CreditServiceImpl implements CreditService {
     @Override
     public Mono<Credit> updateCredit(CreditRequest creditRequest, String creditId) {
         return creditRepository.existsById(creditId)
-            .flatMap(aBoolean -> {
-                if (Boolean.TRUE.equals(aBoolean)) {
-                    return creditRepository.save(CreditBuilder.toCreditEntity(creditRequest, creditId));
-                }
-                return Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Credit not found - "
-                    + "creditId: ".concat(creditId)));
-            })
+            .flatMap(aBoolean -> Boolean.TRUE.equals(aBoolean)
+                ? creditRepository.save(CreditBuilder.toCreditEntity(creditRequest, creditId))
+                : Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Credit not found - "
+                    + "creditId: ".concat(creditId))))
             .doOnSuccess(account -> log.info("Successful update - creditId: ".concat(creditId)));
     }
 
@@ -66,22 +63,22 @@ public class CreditServiceImpl implements CreditService {
             .doOnComplete(() -> log.info("Successful search - creditNumber: ".concat(customerId)));
     }
 
-    private Mono<CreditRequest> validateBusinessCredit(CreditRequest creditRequest) {
+    private Mono<CreditRequest> validatePersonalCredit(CreditRequest creditRequest) {
 
         return customerService.getCustomerById(creditRequest.getCustomerId())
             .flatMap(customerData -> {
                 if (customerData.getType().equals(CustomerTypeEnum.PERSONAL.name())) {
                     return creditRepository.existsByTypeAndCustomerId(creditRequest.getType().name(),
                             customerData.getId())
-                        .flatMap(existsCredit ->
-                            Boolean.TRUE.equals(existsCredit)
-                                ? Mono.error(new RuntimeException("El Cliente Personal ya tiene cuenta con credito"))
-                                : Mono.just(creditRequest)
-                        );
+                        .flatMap(existsCredit -> Boolean.TRUE.equals(existsCredit)
+                            ? Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                            "El Cliente Personal ya cuenta con un credito"))
+                            : Mono.just(creditRequest));
                 }
                 return Mono.just(creditRequest);
             })
-            .switchIfEmpty(Mono.error(new RuntimeException("No se encontraron datos del titular")));
+            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND,
+                "Customer not found - customerId: ".concat(creditRequest.getCustomerId()))));
 
     }
 

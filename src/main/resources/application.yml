@@ -7,9 +7,9 @@ spring:
       database: demo
 
 server:
-  port: 8083
-  error:
-    include-stacktrace: NEVER
+  port: 8085
+#  error:
+#    include-stacktrace: NEVER
 
 microservices:
   customer:
