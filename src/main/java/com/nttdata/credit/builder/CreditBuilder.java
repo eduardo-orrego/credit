@@ -32,6 +32,7 @@ public class CreditBuilder {
             .dateCreated(LocalDateTime.now())
             .lastUpdated(LocalDateTime.now())
             .build();
+
     }
 
     private static BigInteger generateCreditNumber() {
