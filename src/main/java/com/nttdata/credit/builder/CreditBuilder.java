@@ -24,9 +24,13 @@ public class CreditBuilder {
                 : generateCreditNumber())
             .disbursementDate(creditRequest.getDisbursementDate())
             .amount(creditRequest.getAmount())
-            .outstandingBalance(new BigDecimal("0.00"))
+            .outstandingBalance(Objects.nonNull(creditRequest.getOutstandingBalance())
+                ? creditRequest.getOutstandingBalance()
+                : BigDecimal.valueOf(0.00))
             .currency(creditRequest.getCurrency().name())
-            .interestRate(creditRequest.getInterestRate())
+            .interestRate(Objects.nonNull(creditRequest.getInterestRate())
+                ? creditRequest.getInterestRate()
+                : BigDecimal.valueOf(0.00))
             .dueDate(creditRequest.getDueDate())
             .lastTransactionDate(LocalDateTime.now())
             .dateCreated(LocalDateTime.now())
@@ -36,7 +40,7 @@ public class CreditBuilder {
     }
 
     private static BigInteger generateCreditNumber() {
-        String creditCard = "30".concat(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")));
-        return new BigInteger(creditCard);
+        String creditNumber = "30".concat(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")));
+        return new BigInteger(creditNumber);
     }
 }

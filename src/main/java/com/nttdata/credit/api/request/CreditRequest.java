@@ -34,10 +34,11 @@ public class CreditRequest {
     @NotNull(message = "El campo 'amount' no puede ser nulo")
     private BigDecimal amount;
 
+    private BigDecimal outstandingBalance;
+
     @NotNull(message = "El campo 'currency' no puede ser nulo")
     private CurrencyTypeEnum currency;
 
-    @NotNull(message = "El campo 'interestRate' no puede ser nulo")
     private BigDecimal interestRate;
 
     @NotNull(message = "El campo 'dueDate' no puede ser nulo")
