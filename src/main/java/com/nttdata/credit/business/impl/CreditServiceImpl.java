@@ -58,7 +58,7 @@ public class CreditServiceImpl implements CreditService {
 
     private Mono<CreditRequest> validatePersonalCredit(CreditRequest creditRequest) {
 
-        return customerService.getCustomerById(creditRequest.getCustomerId())
+        return customerService.findCustomer(creditRequest.getCustomerId())
             .flatMap(customerData -> {
                 if (customerData.getType().equals(CustomerTypeEnum.PERSONAL.name())) {
                     return creditRepository.findExistsCredit(creditRequest.getType().name(),

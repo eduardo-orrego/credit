@@ -16,7 +16,7 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerClient customerClient;
 
     @Override
-    public Mono<Customer> getCustomerById(String customerId) {
+    public Mono<Customer> findCustomer(String customerId) {
         return customerClient.getCustomerById(customerId)
             .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND,
                 "Customer not found - customerId: ".concat(customerId))));
