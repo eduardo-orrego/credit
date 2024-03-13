@@ -1,6 +1,6 @@
 package com.nttdata.credit.repository;
 
-import com.nttdata.credit.model.credit.Credit;
+import com.nttdata.credit.model.Credit;
 import java.math.BigInteger;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
@@ -12,8 +12,8 @@ public interface CreditRepository extends ReactiveMongoRepository<Credit, String
 
     Mono<Credit> findByCreditNumber(BigInteger creditNumber);
 
-    Flux<Credit> findByCreditHoldersHolderId(String holderId);
+    Flux<Credit> findByCustomerId(String customerId);
 
-    Mono<Boolean> existsByTypeAndCreditHoldersHolderId(String type, String holderId);
+    Mono<Boolean> existsByTypeAndCustomerId(String type, String customerId);
 
 }
