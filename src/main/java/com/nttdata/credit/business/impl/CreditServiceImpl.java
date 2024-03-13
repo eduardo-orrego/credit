@@ -20,47 +20,40 @@ import reactor.core.publisher.Mono;
 @Service
 public class CreditServiceImpl implements CreditService {
 
-    private final CreditRepository creditRepository;
-    private final CustomerService customerService;
+    @Autowired
+    private CustomerService customerService;
 
     @Autowired
-    public CreditServiceImpl(CreditRepository creditRepository, CustomerService customerService) {
-        this.creditRepository = creditRepository;
-        this.customerService = customerService;
-    }
+    private CreditRepository creditRepository;
 
     @Override
     public Mono<Credit> saveCredit(CreditRequest credit) {
         return this.validatePersonalCredit(credit)
             .map(creditRequest -> CreditBuilder.toCreditEntity(creditRequest, null))
-            .flatMap(creditRepository::save)
-            .doOnSuccess(customer -> log.info("Successful update - creditId: ".concat(customer.getId())));
+            .flatMap(creditRepository::saveCredit);
     }
 
     @Override
     public Mono<Credit> updateCredit(CreditRequest creditRequest, String creditId) {
-        return creditRepository.existsById(creditId)
+        return creditRepository.findExistsCredit(creditId)
             .flatMap(aBoolean -> Boolean.TRUE.equals(aBoolean)
-                ? creditRepository.save(CreditBuilder.toCreditEntity(creditRequest, creditId))
+                ? creditRepository.saveCredit(CreditBuilder.toCreditEntity(creditRequest, creditId))
                 : Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Credit not found - "
-                    + "creditId: ".concat(creditId))))
-            .doOnSuccess(account -> log.info("Successful update - creditId: ".concat(creditId)));
+                    + "creditId: ".concat(creditId))));
     }
 
     @Override
     public Mono<Credit> getCreditByCreditNumber(BigInteger creditNumber) {
-        return creditRepository.findByCreditNumber(creditNumber)
+        return creditRepository.findCredit(creditNumber)
             .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Credit not found - "
-                + "creditNumber: ".concat(creditNumber.toString()))))
-            .doOnSuccess(customer -> log.info("Successful search - creditNumber: ".concat(creditNumber.toString())));
+                + "creditNumber: ".concat(creditNumber.toString()))));
     }
 
     @Override
     public Flux<Credit> getCreditsByCustomerId(String customerId) {
-        return creditRepository.findByCustomerId(customerId)
+        return creditRepository.findCredit(customerId)
             .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Credit not found - "
-                + "customerId: ".concat(customerId))))
-            .doOnComplete(() -> log.info("Successful search - creditNumber: ".concat(customerId)));
+                + "customerId: ".concat(customerId))));
     }
 
     private Mono<CreditRequest> validatePersonalCredit(CreditRequest creditRequest) {
@@ -68,7 +61,7 @@ public class CreditServiceImpl implements CreditService {
         return customerService.getCustomerById(creditRequest.getCustomerId())
             .flatMap(customerData -> {
                 if (customerData.getType().equals(CustomerTypeEnum.PERSONAL.name())) {
-                    return creditRepository.existsByTypeAndCustomerId(creditRequest.getType().name(),
+                    return creditRepository.findExistsCredit(creditRequest.getType().name(),
                             customerData.getId())
                         .flatMap(existsCredit -> Boolean.TRUE.equals(existsCredit)
                             ? Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -76,9 +69,7 @@ public class CreditServiceImpl implements CreditService {
                             : Mono.just(creditRequest));
                 }
                 return Mono.just(creditRequest);
-            })
-            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND,
-                "Customer not found - customerId: ".concat(creditRequest.getCustomerId()))));
+            });
 
     }
 
