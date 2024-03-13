@@ -17,7 +17,7 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerClient customerClient;
 
     @Autowired
-    private CustomerServiceImpl(CustomerClient customerClient) {
+    CustomerServiceImpl(CustomerClient customerClient) {
         this.customerClient = customerClient;
     }
 

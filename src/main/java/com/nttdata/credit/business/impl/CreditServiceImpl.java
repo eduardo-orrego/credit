@@ -26,7 +26,7 @@ public class CreditServiceImpl implements CreditService {
     private final CreditRepository creditRepository;
 
     @Autowired
-    private CreditServiceImpl(CustomerService customerService, CreditRepository creditRepository) {
+    CreditServiceImpl(CustomerService customerService, CreditRepository creditRepository) {
         this.creditRepository = creditRepository;
         this.customerService = customerService;
     }

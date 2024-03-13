@@ -17,7 +17,7 @@ public class CreditRepositoryImpl implements CreditRepository {
     private final CreditReactiveMongodb creditReactiveMongodb;
 
     @Autowired
-    private CreditRepositoryImpl(CreditReactiveMongodb creditReactiveMongodb) {
+    CreditRepositoryImpl(CreditReactiveMongodb creditReactiveMongodb) {
         this.creditReactiveMongodb = creditReactiveMongodb;
     }
 
