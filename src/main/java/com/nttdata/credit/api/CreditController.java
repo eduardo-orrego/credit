@@ -32,7 +32,7 @@ public class CreditController {
     private final CreditService creditService;
 
     @Autowired
-    public CreditController(CreditService creditService) {
+    private CreditController(CreditService creditService) {
         this.creditService = creditService;
     }
 

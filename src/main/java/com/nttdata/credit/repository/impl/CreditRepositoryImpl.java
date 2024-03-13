@@ -14,8 +14,12 @@ import reactor.core.publisher.Mono;
 @Repository
 public class CreditRepositoryImpl implements CreditRepository {
 
+    private final CreditReactiveMongodb creditReactiveMongodb;
+
     @Autowired
-    private CreditReactiveMongodb creditReactiveMongodb;
+    private CreditRepositoryImpl(CreditReactiveMongodb creditReactiveMongodb) {
+        this.creditReactiveMongodb = creditReactiveMongodb;
+    }
 
     @Override
     public Mono<Credit> findCredit(BigInteger creditNumber) {
