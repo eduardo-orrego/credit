@@ -6,6 +6,7 @@ import com.nttdata.credit.business.CreditService;
 import com.nttdata.credit.business.CustomerService;
 import com.nttdata.credit.enums.CustomerTypeEnum;
 import com.nttdata.credit.model.Credit;
+import com.nttdata.credit.model.customer.Customer;
 import com.nttdata.credit.repository.CreditRepository;
 import java.math.BigInteger;
 import lombok.extern.slf4j.Slf4j;
@@ -20,67 +21,60 @@ import reactor.core.publisher.Mono;
 @Service
 public class CreditServiceImpl implements CreditService {
 
-    private final CreditRepository creditRepository;
     private final CustomerService customerService;
 
+    private final CreditRepository creditRepository;
+
     @Autowired
-    public CreditServiceImpl(CreditRepository creditRepository, CustomerService customerService) {
+    CreditServiceImpl(CustomerService customerService, CreditRepository creditRepository) {
         this.creditRepository = creditRepository;
         this.customerService = customerService;
     }
 
     @Override
-    public Mono<Credit> saveCredit(CreditRequest credit) {
-        return this.validatePersonalCredit(credit)
-            .map(creditRequest -> CreditBuilder.toCreditEntity(creditRequest, null))
-            .flatMap(creditRepository::save)
-            .doOnSuccess(customer -> log.info("Successful update - creditId: ".concat(customer.getId())));
+    public Mono<Credit> saveCredit(CreditRequest creditRequest) {
+        return customerService.findCustomer(creditRequest.getCustomerId())
+            .flatMap(customerData -> this.validateCredit(creditRequest, customerData))
+            .map(creditValidated -> CreditBuilder.toCreditEntity(creditValidated, null))
+            .flatMap(creditRepository::saveCredit);
     }
 
     @Override
     public Mono<Credit> updateCredit(CreditRequest creditRequest, String creditId) {
-        return creditRepository.existsById(creditId)
+        return creditRepository.findExistsCredit(creditId)
             .flatMap(aBoolean -> Boolean.TRUE.equals(aBoolean)
-                ? creditRepository.save(CreditBuilder.toCreditEntity(creditRequest, creditId))
+                ? creditRepository.saveCredit(CreditBuilder.toCreditEntity(creditRequest, creditId))
                 : Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Credit not found - "
-                    + "creditId: ".concat(creditId))))
-            .doOnSuccess(account -> log.info("Successful update - creditId: ".concat(creditId)));
+                    + "creditId: ".concat(creditId))));
     }
 
     @Override
     public Mono<Credit> getCreditByCreditNumber(BigInteger creditNumber) {
-        return creditRepository.findByCreditNumber(creditNumber)
+        return creditRepository.findCredit(creditNumber)
             .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Credit not found - "
-                + "creditNumber: ".concat(creditNumber.toString()))))
-            .doOnSuccess(customer -> log.info("Successful search - creditNumber: ".concat(creditNumber.toString())));
+                + "creditNumber: ".concat(creditNumber.toString()))));
     }
 
     @Override
     public Flux<Credit> getCreditsByCustomerId(String customerId) {
-        return creditRepository.findByCustomerId(customerId)
+        return creditRepository.findCredit(customerId)
             .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Credit not found - "
-                + "customerId: ".concat(customerId))))
-            .doOnComplete(() -> log.info("Successful search - creditNumber: ".concat(customerId)));
+                + "customerId: ".concat(customerId))));
     }
 
-    private Mono<CreditRequest> validatePersonalCredit(CreditRequest creditRequest) {
+    private Mono<CreditRequest> validateCredit(CreditRequest creditRequest, Customer customerData) {
 
-        return customerService.getCustomerById(creditRequest.getCustomerId())
-            .flatMap(customerData -> {
-                if (customerData.getType().equals(CustomerTypeEnum.PERSONAL.name())) {
-                    return creditRepository.existsByTypeAndCustomerId(creditRequest.getType().name(),
-                            customerData.getId())
-                        .flatMap(existsCredit -> Boolean.TRUE.equals(existsCredit)
-                            ? Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                            "El Cliente Personal ya cuenta con un credito"))
-                            : Mono.just(creditRequest));
-                }
-                return Mono.just(creditRequest);
-            })
-            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND,
-                "Customer not found - customerId: ".concat(creditRequest.getCustomerId()))));
+        if (customerData.getType().equals(CustomerTypeEnum.PERSONAL.name())) {
+            return creditRepository.findExistsCredit(creditRequest.getType().name(), customerData.getId())
+                .flatMap(existsCredit -> Boolean.TRUE.equals(existsCredit)
+                    ? Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "El Cliente Personal ya cuenta con un credito"))
+                    : Mono.just(creditRequest));
+        }
+        return Mono.just(creditRequest);
 
     }
+
 
 }
 
