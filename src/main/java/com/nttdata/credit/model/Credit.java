@@ -24,15 +24,15 @@ public class Credit {
     private String status;
     private String currency;
     private BigDecimal amount;
-    private LocalDate disbursementDate; //fecha de desembolso
+    private LocalDate disbursementDate;
     private BigInteger customerDocument;
     private LocalDate dueDate;
 
     private BigInteger creditNumber;
     private BigDecimal outstandingBalance;
     private BigDecimal interestRate;
-    private BigDecimal availableBalance; ////////// para un credito que usa tarjeta de credito
-    private BigDecimal creditLimit; ///////// para un credito que usa tarjeta de credito
+    private BigDecimal availableBalance;
+    private BigDecimal creditLimit;
 
     private LocalDateTime lastTransactionDate;
     private LocalDateTime dateCreated;
