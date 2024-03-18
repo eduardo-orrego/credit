@@ -32,11 +32,8 @@ public class CreditRequest {
     @NotNull(message = "El campo 'amount' no puede ser nulo")
     private BigDecimal amount;
 
-    @NotNull(message = "El campo 'disbursementDate' no puede ser nulo")
     private LocalDate disbursementDate;
-    @NotNull(message = "El campo 'dueDate' no puede ser nulo")
     private LocalDate dueDate;
-
     @Size(min = 16, max = 16)
     private BigInteger creditNumber;
     private BigDecimal outstandingBalance;
