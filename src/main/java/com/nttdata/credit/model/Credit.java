@@ -22,14 +22,18 @@ public class Credit {
     private String id;
     private String type;
     private String status;
-    private String customerId;
-    private BigInteger creditNumber;
-    private LocalDate disbursementDate;
-    private BigDecimal amount;
-    private BigDecimal outstandingBalance;
     private String currency;
-    private BigDecimal interestRate;
+    private BigDecimal amount;
+    private LocalDate disbursementDate; //fecha de desembolso
+    private BigInteger customerDocument;
     private LocalDate dueDate;
+
+    private BigInteger creditNumber;
+    private BigDecimal outstandingBalance;
+    private BigDecimal interestRate;
+    private BigDecimal availableBalance; ////////// para un credito que usa tarjeta de credito
+    private BigDecimal creditLimit; ///////// para un credito que usa tarjeta de credito
+
     private LocalDateTime lastTransactionDate;
     private LocalDateTime dateCreated;
     private LocalDateTime lastUpdated;

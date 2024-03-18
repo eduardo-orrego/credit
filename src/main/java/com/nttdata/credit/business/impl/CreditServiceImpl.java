@@ -4,6 +4,7 @@ import com.nttdata.credit.api.request.CreditRequest;
 import com.nttdata.credit.builder.CreditBuilder;
 import com.nttdata.credit.business.CreditService;
 import com.nttdata.credit.business.CustomerService;
+import com.nttdata.credit.business.ProductService;
 import com.nttdata.credit.enums.CustomerTypeEnum;
 import com.nttdata.credit.model.Credit;
 import com.nttdata.credit.model.customer.Customer;
@@ -22,44 +23,61 @@ import reactor.core.publisher.Mono;
 public class CreditServiceImpl implements CreditService {
 
     private final CustomerService customerService;
-
     private final CreditRepository creditRepository;
+    private final ProductService productService;
 
     @Autowired
-    CreditServiceImpl(CustomerService customerService, CreditRepository creditRepository) {
+    CreditServiceImpl(CustomerService customerService, CreditRepository creditRepository,
+        ProductService productService) {
         this.creditRepository = creditRepository;
         this.customerService = customerService;
+        this.productService = productService;
     }
 
     @Override
     public Mono<Credit> saveCredit(CreditRequest creditRequest) {
-        return customerService.findCustomer(creditRequest.getCustomerId())
-            .flatMap(customerData -> this.validateCredit(creditRequest, customerData))
-            .map(creditValidated -> CreditBuilder.toCreditEntity(creditValidated, null))
-            .flatMap(creditRepository::saveCredit);
+        return creditRepository.findExistsCredit(creditRequest.getCreditNumber())
+            .flatMap(aBoolean -> {
+                if (Boolean.FALSE.equals(aBoolean)) {
+                    return customerService.findCustomer(creditRequest.getCustomerDocument())
+                        .flatMap(customerData -> this.validateCredit(creditRequest, customerData))
+                        .flatMap(accountValidated -> productService.findProduct(creditRequest.getType().name())
+                            .map(product -> CreditBuilder.toCreditEntity(accountValidated, product)))
+                        .flatMap(creditRepository::saveCredit);
+                }
+                return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "There is another Credit with the same Credit Number: "
+                        .concat(creditRequest.getCreditNumber().toString())));
+            });
     }
 
     @Override
     public Mono<Credit> updateCredit(CreditRequest creditRequest, String creditId) {
-        return creditRepository.findExistsCredit(creditId)
-            .flatMap(aBoolean -> Boolean.TRUE.equals(aBoolean)
-                ? creditRepository.saveCredit(CreditBuilder.toCreditEntity(creditRequest, creditId))
-                : Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Credit not found - "
-                    + "creditId: ".concat(creditId))));
+        return creditRepository.findCreditById(creditId)
+            .flatMap(creditCurrent -> {
+                if (creditRequest.getCreditNumber().compareTo(creditCurrent.getCreditNumber()) == 0) {
+                    return creditRepository.saveCredit(CreditBuilder.toCreditEntity(creditRequest,
+                        creditCurrent));
+                }
+                return this.saveCredit(creditRequest);
+            })
+            .switchIfEmpty(Mono.defer(() -> Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND,
+                "Credit not found - creditId: ".concat(creditId)))));
+
     }
 
     @Override
     public Mono<Credit> getCreditByCreditNumber(BigInteger creditNumber) {
         return creditRepository.findCredit(creditNumber)
-            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Credit not found - "
-                + "creditNumber: ".concat(creditNumber.toString()))));
+            .switchIfEmpty(Mono.defer(() -> Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND,
+                "Credit not found - creditNumber: ".concat(creditNumber.toString())))));
     }
 
     @Override
     public Flux<Credit> getCreditsByCustomerId(String customerId) {
         return creditRepository.findCredit(customerId)
-            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Credit not found - "
-                + "customerId: ".concat(customerId))));
+            .switchIfEmpty(Mono.defer(() -> Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND,
+                "Credit not found - customerId: ".concat(customerId)))));
     }
 
     private Mono<CreditRequest> validateCredit(CreditRequest creditRequest, Customer customerData) {
@@ -72,9 +90,7 @@ public class CreditServiceImpl implements CreditService {
                     : Mono.just(creditRequest));
         }
         return Mono.just(creditRequest);
-
     }
-
 
 }
 

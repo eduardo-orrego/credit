@@ -14,4 +14,7 @@ server:
 microservices:
   customer:
     urlPaths:
-      getCustomerById: http://localhost:8081/api/customers/{customerId}
+      getCustomer: http://localhost:8081/api/customers
+  products:
+    urlPaths:
+      getProduct: http://localhost:8086/api/products

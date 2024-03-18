@@ -7,13 +7,15 @@ import reactor.core.publisher.Mono;
 
 public interface CreditRepository {
 
+    Mono<Credit> findCreditById(String creditId);
+
     Mono<Credit> findCredit(BigInteger creditNumber);
 
     Flux<Credit> findCredit(String customerId);
 
     Mono<Boolean> findExistsCredit(String type, String customerId);
 
-    Mono<Boolean> findExistsCredit(String creditId);
+    Mono<Boolean> findExistsCredit(BigInteger creditNumber);
 
     Mono<Credit> saveCredit(Credit credit);
 
