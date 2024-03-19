@@ -14,6 +14,6 @@ public interface CreditService {
 
     Mono<Credit> getCreditByCreditNumber(BigInteger creditNumber);
 
-    Flux<Credit> getCreditsByCustomerId(String customerId);
+    Flux<Credit> getCreditsByCustomerDocument(BigInteger customerDocument);
 
 }

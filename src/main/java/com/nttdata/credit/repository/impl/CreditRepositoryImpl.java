@@ -34,9 +34,9 @@ public class CreditRepositoryImpl implements CreditRepository {
     }
 
     @Override
-    public Flux<Credit> findCredit(String customerId) {
-        return creditReactiveMongodb.findByCustomerId(customerId)
-            .doOnComplete(() -> log.info("Successful find - customerId: ".concat(customerId)));
+    public Flux<Credit> findCredits(BigInteger customerDocument) {
+        return creditReactiveMongodb.findByCustomerDocument(customerDocument)
+            .doOnComplete(() -> log.info("Successful find - customerId: ".concat(customerDocument.toString())));
     }
 
     @Override

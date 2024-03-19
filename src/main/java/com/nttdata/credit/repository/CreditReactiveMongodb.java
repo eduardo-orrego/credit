@@ -12,7 +12,7 @@ public interface CreditReactiveMongodb extends ReactiveMongoRepository<Credit, S
 
     Mono<Credit> findByCreditNumber(BigInteger creditNumber);
 
-    Flux<Credit> findByCustomerId(String customerId);
+    Flux<Credit> findByCustomerDocument(BigInteger customerDocument);
 
     Mono<Boolean> existsByTypeAndCustomerId(String type, String customerId);
 

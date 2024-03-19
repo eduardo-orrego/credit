@@ -11,7 +11,7 @@ public interface CreditRepository {
 
     Mono<Credit> findCredit(BigInteger creditNumber);
 
-    Flux<Credit> findCredit(String customerId);
+    Flux<Credit> findCredits(BigInteger customerdocument);
 
     Mono<Boolean> findExistsCredit(String type, String customerId);
 

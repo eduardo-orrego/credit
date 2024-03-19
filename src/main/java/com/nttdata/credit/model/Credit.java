@@ -27,13 +27,11 @@ public class Credit {
     private LocalDate disbursementDate;
     private BigInteger customerDocument;
     private LocalDate dueDate;
-
     private BigInteger creditNumber;
     private BigDecimal outstandingBalance;
     private BigDecimal interestRate;
     private BigDecimal availableBalance;
     private BigDecimal creditLimit;
-
     private LocalDateTime lastTransactionDate;
     private LocalDateTime dateCreated;
     private LocalDateTime lastUpdated;

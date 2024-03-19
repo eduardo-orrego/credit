@@ -74,10 +74,10 @@ public class CreditServiceImpl implements CreditService {
     }
 
     @Override
-    public Flux<Credit> getCreditsByCustomerId(String customerId) {
-        return creditRepository.findCredit(customerId)
+    public Flux<Credit> getCreditsByCustomerDocument(BigInteger customerDocument) {
+        return creditRepository.findCredits(customerDocument)
             .switchIfEmpty(Mono.defer(() -> Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND,
-                "Credit not found - customerId: ".concat(customerId)))));
+                "Credit not found - customerDocument: ".concat(customerDocument.toString())))));
     }
 
     private Mono<CreditRequest> validateCredit(CreditRequest creditRequest, Customer customerData) {
