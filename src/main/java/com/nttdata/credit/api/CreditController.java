@@ -122,7 +122,7 @@ public class CreditController {
     /**
      * GET : Get a list of credits for the customer
      *
-     * @param customerId (required)
+     * @param customerDocument (required)
      * @return OK (status code 200)
      */
     @Operation(
@@ -139,10 +139,10 @@ public class CreditController {
         produces = {"application/json"}
     )
     public Flux<Credit> creditsGet(
-        @NotNull @Parameter(name = "customerId", description = "", required = true, in = ParameterIn.QUERY)
-        @Validated @RequestParam(value = "customerId") String customerId
+        @NotNull @Parameter(name = "customerDocument", description = "", required = true, in = ParameterIn.QUERY)
+        @Validated @RequestParam(value = "customerDocument") BigInteger customerDocument
     ) {
-        return creditService.getCreditsByCustomerId(customerId);
+        return creditService.getCreditsByCustomerDocument(customerDocument);
     }
 
 

@@ -22,17 +22,21 @@ public class CreditRepositoryImpl implements CreditRepository {
     }
 
     @Override
-    public Mono<Credit> findCredit(BigInteger creditNumber) {
-        return creditReactiveMongodb.findByCreditNumber(creditNumber)
-            .doOnSuccess(credit -> log.info("Successful find - creditNumber: ".concat(creditNumber.toString())));
-
+    public Mono<Credit> findCreditById(String creditId) {
+        return creditReactiveMongodb.findById(creditId)
+            .doOnSuccess(credit -> log.info("Successful find - creditId: ".concat(creditId)));
     }
 
     @Override
-    public Flux<Credit> findCredit(String customerId) {
-        return creditReactiveMongodb.findByCustomerId(customerId)
-            .doOnComplete(() -> log.info("Successful find - customerId: ".concat(customerId)));
+    public Mono<Credit> findCredit(BigInteger creditNumber) {
+        return creditReactiveMongodb.findByCreditNumber(creditNumber)
+            .doOnSuccess(credit -> log.info("Successful find - creditNumber: ".concat(creditNumber.toString())));
+    }
 
+    @Override
+    public Flux<Credit> findCredits(BigInteger customerDocument) {
+        return creditReactiveMongodb.findByCustomerDocument(customerDocument)
+            .doOnComplete(() -> log.info("Successful find - customerId: ".concat(customerDocument.toString())));
     }
 
     @Override
@@ -42,10 +46,9 @@ public class CreditRepositoryImpl implements CreditRepository {
     }
 
     @Override
-    public Mono<Boolean> findExistsCredit(String creditId) {
-        return creditReactiveMongodb.existsById(creditId)
-            .doOnSuccess(exists -> log.info("Successful find exists - creditId: ".concat(creditId)));
-
+    public Mono<Boolean> findExistsCredit(BigInteger creditNumber) {
+        return creditReactiveMongodb.existsByCreditNumber(creditNumber)
+            .doOnSuccess(exists -> log.info("Successful find exists - creditNumber: ".concat(creditNumber.toString())));
     }
 
     @Override

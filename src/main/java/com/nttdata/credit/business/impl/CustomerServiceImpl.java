@@ -3,6 +3,7 @@ package com.nttdata.credit.business.impl;
 import com.nttdata.credit.business.CustomerService;
 import com.nttdata.credit.client.CustomerClient;
 import com.nttdata.credit.model.customer.Customer;
+import java.math.BigInteger;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,11 +23,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Mono<Customer> findCustomer(String customerId) {
-        return customerClient.getCustomerById(customerId)
-            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND,
-                "Customer not found - customerId: ".concat(customerId))))
-            .doOnSuccess(customerEntity -> log.info("Successful find - customerId: ".concat(customerEntity.getId())));
+    public Mono<Customer> findCustomer(BigInteger documentNumber) {
+        return customerClient.getCustomer(documentNumber)
+            .switchIfEmpty(Mono.defer(() -> Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND,
+                "Customer not found - documentNumber: ".concat(documentNumber.toString())))))
+            .doOnSuccess(customerEntity -> log.info("Successful find - documentNumber: "
+                .concat(documentNumber.toString())));
 
     }
 
