@@ -9,36 +9,52 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+/**
+ * Class: CreditRequest. <br/>
+ * <b>Bootcamp NTTDATA</b><br/>
+ *
+ * @author NTTDATA
+ * @version 1.0
+ *   <u>Developed by</u>:
+ *   <ul>
+ *   <li>Developer Carlos</li>
+ *   </ul>
+ * @since 1.0
+ */
+@Getter
+@Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreditRequest {
 
-    @NotNull(message = "El campo 'type' no puede ser nulo")
-    private CreditTypeEnum type;
+  @NotNull(message = "El campo 'type' no puede ser nulo")
+  private CreditTypeEnum type;
 
-    @NotNull(message = "El campo 'status' no puede ser nulo")
-    private StatusTypeEnum status;
+  @NotNull(message = "El campo 'status' no puede ser nulo")
+  private StatusTypeEnum status;
 
-    @NotNull(message = "El campo 'currency' no puede ser nulo")
-    private CurrencyTypeEnum currency;
+  @NotNull(message = "El campo 'currency' no puede ser nulo")
+  private CurrencyTypeEnum currency;
 
-    @NotNull(message = "El campo 'customerDocument' no puede ser vacío")
-    private BigInteger customerDocument;
+  @NotNull(message = "El campo 'customerDocument' no puede ser vacío")
+  private BigInteger customerDocument;
 
-    @NotNull(message = "El campo 'amount' no puede ser nulo")
-    private BigDecimal amount;
+  @NotNull(message = "El campo 'amount' no puede ser nulo")
+  private BigDecimal amount;
 
-    private LocalDate disbursementDate;
-    private LocalDate dueDate;
-    @Size(min = 16, max = 16)
-    private BigInteger creditNumber;
-    private BigDecimal outstandingBalance;
-    private BigDecimal interestRate;
-    private BigDecimal availableBalance;
-    private BigDecimal creditLimit;
+  private LocalDate disbursementDate;
+  private LocalDate dueDate;
+  @Size(min = 16, max = 16)
+  private BigInteger creditNumber;
+  private BigDecimal outstandingBalance;
+  private BigDecimal interestRate;
+  private BigDecimal availableBalance;
+  private BigDecimal creditLimit;
 
 }
