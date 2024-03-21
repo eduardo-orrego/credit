@@ -11,25 +11,33 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
+/**
+ * Class: CustomerServiceImpl. <br/>
+ * <b>Bootcamp NTTDATA</b><br/>
+ *
+ * @author NTTDATA
+ * @version 1.0
+ *   <u>Developed by</u>:
+ *   <ul>
+ *   <li>Developer Carlos</li>
+ *   </ul>
+ * @since 1.0
+ */
 @Slf4j
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-    private final CustomerClient customerClient;
+  @Autowired
+  private CustomerClient customerClient;
 
-    @Autowired
-    CustomerServiceImpl(CustomerClient customerClient) {
-        this.customerClient = customerClient;
-    }
+  @Override
+  public Mono<Customer> findCustomer(BigInteger documentNumber) {
+    return customerClient.getCustomer(documentNumber)
+      .switchIfEmpty(Mono.defer(() -> Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND,
+        "Customer not found - documentNumber: ".concat(documentNumber.toString())))))
+      .doOnSuccess(customerEntity -> log.info("Successful find - documentNumber: "
+        .concat(documentNumber.toString())));
 
-    @Override
-    public Mono<Customer> findCustomer(BigInteger documentNumber) {
-        return customerClient.getCustomer(documentNumber)
-            .switchIfEmpty(Mono.defer(() -> Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND,
-                "Customer not found - documentNumber: ".concat(documentNumber.toString())))))
-            .doOnSuccess(customerEntity -> log.info("Successful find - documentNumber: "
-                .concat(documentNumber.toString())));
-
-    }
+  }
 
 }
