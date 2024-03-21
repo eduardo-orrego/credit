@@ -33,6 +33,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CreditRequest {
 
+  @Size(min = 16, max = 16,message = "El campo 'accountNumber' debe tener 16 digitos")
+  private BigInteger creditNumber;
+
   @NotNull(message = "El campo 'type' no puede ser nulo")
   private CreditTypeEnum type;
 
@@ -50,8 +53,6 @@ public class CreditRequest {
 
   private LocalDate disbursementDate;
   private LocalDate dueDate;
-  @Size(min = 16, max = 16)
-  private BigInteger creditNumber;
   private BigDecimal outstandingBalance;
   private BigDecimal interestRate;
   private BigDecimal availableBalance;
