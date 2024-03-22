@@ -27,10 +27,10 @@ public class ProductClient {
 
   public Mono<Product> getProducts(String typeProduct) {
 
-    return WebClient.create()
+    return WebClient.create(urlPathGetProducts)
       .get()
       .uri(uriBuilder -> uriBuilder
-        .queryParam("type", typeProduct)
+        .queryParam("productType", typeProduct)
         .build())
       .accept(MediaType.APPLICATION_JSON)
       .retrieve()
