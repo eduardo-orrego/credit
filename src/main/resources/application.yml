@@ -17,4 +17,4 @@ microservices:
       getCustomer: http://localhost:8081/api/customers
   products:
     urlPaths:
-      getProduct: http://localhost:8086/api/products
+      getProduct: http://localhost:8082/api/products
