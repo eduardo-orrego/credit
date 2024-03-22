@@ -27,10 +27,9 @@ public class CustomerClient {
   private String urlPathGetCustomer;
 
   public Mono<Customer> getCustomer(BigInteger documentNumber) {
-    return WebClient.create()
+    return WebClient.create(urlPathGetCustomer)
       .get()
       .uri(uriBuilder -> uriBuilder
-        .path(urlPathGetCustomer)
         .queryParam("documentNumber", documentNumber)
         .build())
       .accept(MediaType.APPLICATION_JSON)
